@@ -54,6 +54,9 @@ int main()
     runtest(0, 0, 0);
     runtest(0, 1, 0);
     runtest(1, 1, 1);
+    runtest(3, 8, 5);
+    runtest(9, 7, 8);
+    runtest(7, 9, 8);
     runtest(UINT32_MAX, 0, UINT32_MAX / 2);
     runtest(0, UINT32_MAX, UINT32_MAX / 2);
     runtest(UINT32_MAX, UINT32_MAX, UINT32_MAX);
