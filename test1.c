@@ -4,7 +4,7 @@
 typedef struct testfunc
 {
     char *function_name;
-    uint32_t (*average_function)(uint32_t, uint32_t);
+    uint32_t (*test_function)(uint32_t, uint32_t);
 } TestFunc;
 
 uint32_t average(uint32_t a, uint32_t b)
@@ -37,7 +37,7 @@ void runtest(uint32_t a, uint32_t b, uint32_t expect)
 
     for (int i = 0; i < sizeof(tests) / sizeof(TestFunc); i++)
     {
-        int result = tests[i].average_function(a, b);
+        int result = tests[i].test_function(a, b);
         if (result == expect)
         {
             printf("[V] %s(%u,%u)=%u\r\n", tests[i].function_name, a, b, result);
