@@ -3,6 +3,8 @@
 #include <stdio.h>
 #include <time.h>
 
+typedef uint64_t (*gcd_function)(uint64_t, uint64_t);
+
 uint64_t gcd64(uint64_t u, uint64_t v)
 {
     if (!u || !v)
@@ -45,18 +47,48 @@ uint64_t gcd64_v2(uint64_t u, uint64_t v)
     return u << shift;
 }
 
+uint64_t gcd64_v3(uint64_t u, uint64_t v)
+{
+    if (!u || !v)
+        return u | v;
+    int u_ctz = __builtin_ctz(u);
+    int v_ctz = __builtin_ctz(v);
+    u = u >> u_ctz;
+    v = v >> v_ctz;
+    int shift = u_ctz > v_ctz ? v_ctz : u_ctz;
+    do
+    {
+        v = v >> __builtin_ctz(v);
+        if (u < v)
+        {
+            v -= u;
+        }
+        else
+        {
+            uint64_t t = u - v;
+            u = v;
+            v = t;
+        }
+    } while (v);
+    return u << shift;
+}
+
 // return 1 if gcd64_v2 equals gcd64, return 0 if failed.
 int runtest(uint64_t u, uint64_t v)
 {
-    uint64_t result = gcd64_v2(u, v);
+    uint64_t result_v2 = gcd64_v2(u, v);
+    uint64_t result_v3 = gcd64_v3(u, v);
     uint64_t expect = gcd64(u, v);
-    if (result == expect)
+    if ((result_v2 == expect) && (result_v3 == expect))
     {
         return 1;
     }
     else
     {
-        printf("[X] gcd64(%lu,%lu)=%lu and gcd64_v2(%lu,%lu)=%lu\r\n", u, v, expect, u, v, result);
+        if (result_v2 != expect)
+            printf("[X] gcd64(%lu,%lu)=%lu and gcd64_v2(%lu,%lu)=%lu\r\n", u, v, expect, u, v, result_v2);
+        if (result_v3 != expect)
+            printf("[X] gcd64(%lu,%lu)=%lu and gcd64_v3(%lu,%lu)=%lu\r\n", u, v, expect, u, v, result_v3);
         return 0;
     }
 }
@@ -72,6 +104,18 @@ uint64_t rand64(void)
     return r;
 }
 
+// return execute func times cost in seconds
+float execute_cost(gcd_function func, int times)
+{
+    clock_t start = clock();
+    while (times--)
+    {
+        func(rand64(), rand64());
+    }
+    clock_t end = clock();
+    return (float)(end - start) / CLOCKS_PER_SEC;
+}
+
 int main()
 {
     srand(time(NULL));
@@ -85,4 +129,10 @@ int main()
     {
         printf("Passed.\r\n");
     }
+    // test performance
+    int performance_times = 1000000;
+    float gcd64_v2_cost = execute_cost(gcd64_v2, performance_times);
+    float gcd64_v3_cost = execute_cost(gcd64_v3, performance_times);
+    printf("gcd64_v2 cost %f seconds, __builtin_ctz cost %f seconds,\r\nUplift performance %f%%\r\n",
+           gcd64_v2_cost, gcd64_v3_cost, (1/gcd64_v3_cost - 1/gcd64_v2_cost)*100/(1/gcd64_v2_cost));
 }
