@@ -51,14 +51,14 @@ uint64_t gcd64_v3(uint64_t u, uint64_t v)
 {
     if (!u || !v)
         return u | v;
-    int u_ctz = __builtin_ctzll(u);
-    int v_ctz = __builtin_ctzll(v);
+    int u_ctz = __builtin_ctzl(u);
+    int v_ctz = __builtin_ctzl(v);
     u = u >> u_ctz;
     v = v >> v_ctz;
     int shift = u_ctz > v_ctz ? v_ctz : u_ctz;
     do
     {
-        v = v >> __builtin_ctzll(v);
+        v = v >> __builtin_ctzl(v);
         if (u < v)
         {
             v -= u;
@@ -134,5 +134,5 @@ int main()
     float gcd64_v2_cost = execute_cost(gcd64_v2, performance_times);
     float gcd64_v3_cost = execute_cost(gcd64_v3, performance_times);
     printf("gcd64_v2 cost %f seconds, __builtin_ctz cost %f seconds,\r\nUplift performance %f%%\r\n",
-           gcd64_v2_cost, gcd64_v3_cost, (1/gcd64_v3_cost - 1/gcd64_v2_cost)*100/(1/gcd64_v2_cost));
+           gcd64_v2_cost, gcd64_v3_cost, (1 / gcd64_v3_cost - 1 / gcd64_v2_cost) * 100 / (1 / gcd64_v2_cost));
 }
