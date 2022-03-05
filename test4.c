@@ -111,4 +111,8 @@ int main()
            naive_cost, improved_cost, (1 / improved_cost - 1 / naive_cost) * 100 / (1 / naive_cost));
     printf("naive cost %f seconds, improved2 cost %f seconds,\r\nUplift performance %f%%\r\n",
            naive_cost, improved2_cost, (1 / improved2_cost - 1 / naive_cost) * 100 / (1 / naive_cost));
+    free(bitmap);
+    free(naive_out);
+    free(improved_out);
+    free(improved2_out);
 }
