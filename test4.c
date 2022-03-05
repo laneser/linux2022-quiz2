@@ -49,7 +49,7 @@ size_t improved2(uint64_t *bitmap, size_t bitmapsize, uint32_t *out)
         {
             uint64_t t = bitset & -bitset;
             int r = __builtin_ctzll(bitset);
-            out[pos++] = (k << 8) + r;
+            out[pos++] = (k << 6) + r;
             bitset ^= t;
         }
     }
@@ -70,7 +70,7 @@ uint64_t rand64(void)
 int main()
 {
     srand(time(NULL));
-    int bitmapsize = 100000;
+    int bitmapsize = 1024;
     int maxoutsize = bitmapsize * sizeof(uint64_t) * 8;
     uint64_t *bitmap = malloc(sizeof(uint64_t) * bitmapsize);
     uint32_t *naive_out = malloc(sizeof(uint32_t) * maxoutsize);
@@ -101,7 +101,7 @@ int main()
         }
         if (naive_out[i] != improved2_out[i])
         {
-            printf("Mismatched at index %d, %u != %u\r\n", i, naive_out[i], improved2_out[i]);
+            printf("Mismatched2 at index %d, %u != %u\r\n", i, naive_out[i], improved2_out[i]);
             isPass = 0;
             break;
         }
@@ -109,6 +109,6 @@ int main()
     printf(isPass ? "Passed\r\n" : "Failed\r\n");
     printf("naive cost %f seconds, improved cost %f seconds,\r\nUplift performance %f%%\r\n",
            naive_cost, improved_cost, (1 / improved_cost - 1 / naive_cost) * 100 / (1 / naive_cost));
-    printf("naive cost %f seconds, improved cost %f seconds,\r\nUplift performance %f%%\r\n",
+    printf("naive cost %f seconds, improved2 cost %f seconds,\r\nUplift performance %f%%\r\n",
            naive_cost, improved2_cost, (1 / improved2_cost - 1 / naive_cost) * 100 / (1 / naive_cost));
 }

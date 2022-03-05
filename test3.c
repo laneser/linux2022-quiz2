@@ -51,14 +51,14 @@ uint64_t gcd64_v3(uint64_t u, uint64_t v)
 {
     if (!u || !v)
         return u | v;
-    int u_ctz = __builtin_ctz(u);
-    int v_ctz = __builtin_ctz(v);
+    int u_ctz = __builtin_ctzll(u);
+    int v_ctz = __builtin_ctzll(v);
     u = u >> u_ctz;
     v = v >> v_ctz;
     int shift = u_ctz > v_ctz ? v_ctz : u_ctz;
     do
     {
-        v = v >> __builtin_ctz(v);
+        v = v >> __builtin_ctzll(v);
         if (u < v)
         {
             v -= u;
@@ -99,7 +99,7 @@ uint64_t rand64(void)
     for (int i = 0; i < 64; i += 32)
     {
         r <<= 32;
-        r ^= (unsigned)rand();
+        r |= (unsigned)rand();
     }
     return r;
 }
