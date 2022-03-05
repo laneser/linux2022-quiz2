@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -O1 -g -Wall -Werror -Idudect -I.
 
-all: test1 test2 test3 test4
+all: test1 test2 test3 test4 test5
 
 %.o: %.c
 	$(VECHO) "  CC\t$@\n"
@@ -15,3 +15,4 @@ run: all
 	./test2
 	./test3
 	./test4
+	./test5
