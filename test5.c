@@ -192,8 +192,12 @@ char *fractionToDecimal2(int numerator, int denominator)
 
 void displayFractionToDecimal(int numerator, int denominator)
 {
-    printf("%d/%d=%s\r\n", numerator, denominator, fractionToDecimal(numerator, denominator));
-    printf("%d/%d=%s\r\n", numerator, denominator, fractionToDecimal2(numerator, denominator));
+    char *str = fractionToDecimal(numerator, denominator);
+    printf("%d/%d=%s\r\n", numerator, denominator, str);
+    char *str2 = fractionToDecimal2(numerator, denominator);
+    printf("%d/%d=%s\r\n", numerator, denominator, str2);
+    free(str);
+    free(str2);
 }
 
 int main()
